@@ -57,7 +57,6 @@ RUN set -eux; \
 FROM ubuntu:18.04
 
 # Default to UTF-8 file.encoding
-
 ENV LANG=en_US.UTF-8
 
 ENV JAVA_VERSION=1.8.0_271 \
