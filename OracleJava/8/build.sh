@@ -8,6 +8,7 @@ if test "$1" = "ubuntu"
 then
     echo "Building Oracle Server JRE 8 on Ubuntu 18:04"
     docker build --file Dockerfile.ubuntu --tag oracle/serverjre:8-ubuntu1804 .
+    # docker build --file Dockerfile.ubuntu --tag oracle/serverjre:8-ubuntu1804 .
     exit 0
 fi
 
