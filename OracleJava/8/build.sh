@@ -4,6 +4,13 @@
 #
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
+if test "$1" = "ubuntu"
+then
+    echo "Building Oracle Server JRE 8 on Ubuntu 18:04"
+    # docker build --file Dockerfile.ubuntu --tag oracle/serverjre:8-ubuntu1804 .
+    exit 0
+fi
+
 if test "$1" = "8-slim"
 then
 	echo "Building Oracle Server JRE 8 on Oracle Linux 8 slim"
@@ -12,4 +19,3 @@ else
 	echo "Building Oracle Server JRE 8 on Oracle Linux 7 slim"
 	docker build --tag oracle/serverjre:8 --tag oracle/serverjre:8-oraclelinux7 .
 fi
-
