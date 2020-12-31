@@ -20,10 +20,11 @@ Parameters:
        Choose one of: $(for i in $(ls -d */); do echo -n "${i%%/}  "; done)
    -d: creates image based on 'developer' distribution
    -g: creates image based on 'generic' distribution
-   -j: choose '8' to create a 14.1.1.0 image with JDK 8 or '11' to create a 14.1.1.0 image with JDK 11. 
    -m: creates image based on 'slim' distribution
+   -j: choose '8' to create a 14.1.1.0 image with JDK 8 or '11' to create a 14.1.1.0 image with JDK 11. 
    -c: enables Docker image layer cache during build
    -s: skips the MD5 check of packages
+   -u: use Ubuntu as base image
 
 * select one distribution only: -d, -g, or -m
 
@@ -65,7 +66,7 @@ VERSION="12.2.1.4"
 JDKVER=8
 SKIPMD5=0
 NOCACHE=true
-while getopts "hsdgmc:j:v:" optname; do
+while getopts "hsdgmucj:v:" optname; do
   case "$optname" in
     "h")
       usage
@@ -97,6 +98,10 @@ while getopts "hsdgmc:j:v:" optname; do
     "c")
       NOCACHE=false
       echo "Set- NOCACHE to false"
+      ;;
+    "u")
+      UBUNTU=".ubuntu"
+      echo "Set- UBUNTU to true"
       ;;
     *)
     # Should not occur
@@ -135,6 +140,10 @@ fi
 # WebLogic Image Name
 IMAGE_NAME="oracle/weblogic:$VERSION-$DIST"
 
+if [ "${UBUNTU}" != "" ]; then
+  IMAGE_NAME="oracle/weblogic:$VERSION-$DIST-ubuntu"  
+fi
+
 # Go into version folder
 cd $VERSION
 
@@ -172,11 +181,11 @@ fi
 # BUILDING THE IMAGE #
 # ################## #
 echo "Building image '$IMAGE_NAME' ..."
-echo "Building image using Dockerfile.'$DIST'"
+echo "Building image using Dockerfile.'$DIST$UBUNTU'"
 
 # BUILD THE IMAGE (replace all environment variables)
 BUILD_START=$(date '+%s')
-docker build --force-rm=$NOCACHE --no-cache=$NOCACHE $PROXY_SETTINGS -t $IMAGE_NAME -f Dockerfile.$DIST . || {
+  docker build --force-rm=$NOCACHE --no-cache=$NOCACHE $PROXY_SETTINGS -t $IMAGE_NAME -f Dockerfile.$DIST$UBUNTU . || {
   echo "There was an error building the image."
   exit 1
 }
